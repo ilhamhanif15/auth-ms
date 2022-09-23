@@ -34,9 +34,12 @@ class AuthMsServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/authms.php', 'authms');
 
         // Register the service the package provides.
-        $this->app->singleton('authms', function ($app) {
+        $this->app->bind('authms', function ($app) {
             return new AuthMs;
         });
+
+        // $loader = AliasLoader::getInstance();
+        // $loader->alias('TextInput', TextInput::class);
     }
 
     /**
