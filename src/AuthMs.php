@@ -3,7 +3,9 @@
 namespace Ilhamhanif15\AuthMs;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Http;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthMs
 {
@@ -14,9 +16,17 @@ class AuthMs
 
     const DRIVER_PASSPORT = 'passport';
 
+    private $_request = null;
+
     public function __construct()
     {
         $this->host = config('authms.host');
+    }
+
+    public function setRequest($request)
+    {
+        $this->_request = $request;
+        return $this;
     }
 
     /**
@@ -40,12 +50,13 @@ class AuthMs
         return $response;
     }
 
-    public function register($email, $password, $password_confirmation)
+    public function register($email, $password, $password_confirmation, $role_type = "customer")
     {
         $payload = [
             "email" => $email,
             "password" => $password,
-            "password_confirmation" => $password_confirmation
+            "password_confirmation" => $password_confirmation,
+            "role_type" => $role_type
         ];
         
         if (config('authms.driver') === self::DRIVER_PASSPORT) {
